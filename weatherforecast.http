@@ -1,0 +1,75 @@
+
+GET http://localhost:5042/WeatherForecast
+X-Region: Asia
+###
+
+@baseUrl = https://conversations.messagebird.com/v1
+@AccessKey=AccessKey NkQt9KjIGvVCh4ucj3yYMv0jy
+
+POST {{baseUrl}}/conversations/fccd3e5ba69840258945c9a7f14cb148/messages
+Authorization: {{AccessKey}}
+Content-Type: application/json
+
+{
+    "type": "text",
+    "content":{"text": "hello"}
+}
+###
+
+POST {{baseUrl}}/conversations/start
+Authorization: {{AccessKey}}
+Content-Type: application/json
+
+{
+  "to": "447871431612",
+  "type": "hsm",
+  "channelId": "cb156dd056ee480fa21ebb76c424f86f",
+  "content":{
+    "hsm": {
+      "namespace": "4b2ad623_8abe_4574_a211_6ef714d49a68",
+      "templateName": "support",
+      "language": {
+        "policy": "deterministic",
+        "code": "en"
+      },
+      "params": [
+        {"default": "Roberto"},
+        {"default": "123"},
+        {"default": "new coffee machine"},
+        {"default": "MessageBird, Trompenburgstraat 2C, 1079TX Amsterdam"}
+      ]
+    }
+  }
+}
+###
+
+POST {{baseUrl}}/webhooks
+Authorization: {{AccessKey}}
+Content-Type: application/json
+
+{
+    "events": ["message.created", "message.updated", "conversation.created", "conversation.updated"],
+    "channelId": "cb156dd056ee480fa21ebb76c424f86f",
+    "url": "https://avppnv8aalkgfgp4ewtk2q.webrelay.io/api/receivemessage",
+    "settings": {
+        "expected_http_code" : "2xx",
+        "headers": {
+            "from" : "messagebird"
+        },
+        "query_params" : "transactionID=1312435365",
+        "username" : "user20121",
+        "password" : "mypass1213",
+        "retry": 2,
+        "timeout": 14
+    }
+}
+###
+GET {{baseUrl}}/webhooks
+Authorization: {{AccessKey}}
+###
+DELETE {{baseUrl}}/webhooks/cca0093d0b504ef6b5390277ea7fae54
+Authorization: {{AccessKey}}
+###
+
+
+POST https://1aed-90-210-215-171.eu.ngrok.io/api/receivemessage
